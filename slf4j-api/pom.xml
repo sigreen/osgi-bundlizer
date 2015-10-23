@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>osgi.slf4j-api</groupId>
+	<artifactId>osgi.slf4j-api</artifactId>
+	<version>0.10</version>
+	<packaging>bundle</packaging>
+	<name>slf4j-api OSGi Bundle</name>
+	<description>This OSGi bundle simply wraps slf4j-api-1.1.1.jar artifact.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.12</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<defaultGoal>install</defaultGoal>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<includes>
+									<include>slf4j-api:slf4j-api</include>
+								</includes>
+							</artifactSet>
+							<filters>
+								<filter>
+									<artifact>slf4j-api:slf4j-api</artifact>
+									<excludes>
+										<exclude>**</exclude>
+									</excludes>
+								</filter>
+							</filters>
+							<promoteTransitiveDependencies>true</promoteTransitiveDependencies>
+							<createDependencyReducedPom>true</createDependencyReducedPom>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.1.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>manual</Bundle-SymbolicName>
+						<Export-Package>*</Export-Package>
+						<Import-Package>*</Import-Package>
+						<_versionpolicy>[$(version;==;$(@)),$(version;+;$(@)))</_versionpolicy>
+						<_removeheaders>Ignore-Package,Include-Resource,Private-Package,Embed-Dependency</_removeheaders>
+					</instructions>
+					<unpackBundle>true</unpackBundle>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
